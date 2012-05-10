@@ -1,0 +1,11 @@
+https://github.com/kracekumar/greenlet/zipball/master
+https://github.com/kracekumar/sachintweets/zipball/master
+https://github.com/kracekumar/pip/zipball/develop
+https://github.com/kracekumar/envoy/zipball/master
+https://github.com/kracekumar/brubeck/zipball/master
+https://github.com/kracekumar/stallion/zipball/master
+https://github.com/kracekumar/mongrel2/zipball/master
+https://github.com/kracekumar/requests/zipball/develop
+https://github.com/kracekumar/jinja2/zipball/master
+https://github.com/kracekumar/flask/zipball/master
+https://github.com/kracekumar/clint/zipball/develop
