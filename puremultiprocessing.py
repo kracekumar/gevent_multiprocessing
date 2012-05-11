@@ -11,7 +11,7 @@ import datetime
 from Queue import Empty
 import platform
 
-def download(files_to_download):
+def download(files_to_download, start):
     try:
         while 1:
             print("=== started to download ===")
@@ -27,6 +27,8 @@ def download(files_to_download):
               ) - start))
     except Empty:
         print("queue is empty")
+        print("{0} took {1} seconds to complete all downloads".format(__file__,\
+                                            datetime.datetime.now() - start))
         print("=== end ===")
         
 
@@ -39,13 +41,8 @@ def main():
     total_processors = cpu_count()
     start = datetime.datetime.now()
     for i in range(total_processors):
-        p = Process(target = download, args=(files_to_download, ))
+        p = Process(target = download, args=(files_to_download, start))
         p.start()
-    print("total time taken by puremultiprocessing:{0}".format(\
-                                         datetime.datetime.now() - start))
-
-
-    
 
 if __name__ == "__main__":
     main()
