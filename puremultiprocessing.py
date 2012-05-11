@@ -27,6 +27,7 @@ def download(files_to_download):
               ) - start))
     except Empty:
         print("queue is empty")
+        print("=== end ===")
         
 
 def main():
@@ -40,14 +41,8 @@ def main():
     for i in range(total_processors):
         p = Process(target = download, args=(files_to_download, ))
         p.start()
-    print("=== Machine Details ===")
-    print("Architecture: {0}".format(platform.architecture))
-    print("Dist: {0}".format(platform.dist))
-    print("Processor: {0}".format(platform.processor))
-    print("Total Cores: {0}".format(total_processors))
     print("total time taken by puremultiprocessing:{0}".format(\
                                          datetime.datetime.now() - start))
-    print("=== end ===")
 
 
     
