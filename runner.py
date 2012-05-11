@@ -7,7 +7,8 @@
 """
 
 import os
-files_to_run = ['puremultiprocessing.py', 'sysinfo.py']
+files_to_run = ['puremultiprocessing.py', 'sysinfo.py', \
+                'multiprocessing_gevent.py', 'onlygevent.py']
 for filename in files_to_run:
     os.system("python %s"%filename)
 
