@@ -9,7 +9,7 @@ from multiprocessing import Process, Queue, cpu_count
 from requests import get
 import datetime
 from Queue import Empty
-import sys
+import platform
 
 def download(files_to_download):
     try:
@@ -27,7 +27,6 @@ def download(files_to_download):
               ) - start))
     except Empty:
         print("queue is empty")
-        sys.exit(0)
         
 
 def main():
@@ -36,10 +35,18 @@ def main():
         for to_download in f:
             files_to_download.put_nowait(to_download.split('\n')[0])
     print("=== puremultiprocessing ===")
-    total_process = cpu_count()
-    for i in range(total_process):
+    total_processors = cpu_count()
+    start = datetime.datetime.now()
+    for i in range(total_processors):
         p = Process(target = download, args=(files_to_download, ))
         p.start()
+    print("=== Machine Details ===")
+    print("Architecture: {0}".format(platform.architecture))
+    print("Dist: {0}".format(platform.dist))
+    print("Processor: {0}".format(platform.processor))
+    print("Total Cores: {0}".format(total_process))
+    print("total time taken by puremultiprocessing:{0}".format(\
+                                         datetime.datetime.now() - start)
     print("=== end ===")
 
 
