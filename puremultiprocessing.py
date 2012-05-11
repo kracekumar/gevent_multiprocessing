@@ -44,7 +44,7 @@ def main():
     print("Architecture: {0}".format(platform.architecture))
     print("Dist: {0}".format(platform.dist))
     print("Processor: {0}".format(platform.processor))
-    print("Total Cores: {0}".format(total_processsor))
+    print("Total Cores: {0}".format(total_processors))
     print("total time taken by puremultiprocessing:{0}".format(\
                                          datetime.datetime.now() - start))
     print("=== end ===")
