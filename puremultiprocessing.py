@@ -46,7 +46,7 @@ def main():
     print("Processor: {0}".format(platform.processor))
     print("Total Cores: {0}".format(total_process))
     print("total time taken by puremultiprocessing:{0}".format(\
-                                         datetime.datetime.now() - start)
+                                         datetime.datetime.now() - start))
     print("=== end ===")
 
 
