@@ -20,7 +20,7 @@ def write_to_disk(response):
     if response.ok:
         with open(response.headers['content-disposition'].split('=')[1],
                           'wb') as f:
-            f.write(dl_file.content)
+            f.write(response.content)
     
 def main():
     urls = get_files_to_download()
