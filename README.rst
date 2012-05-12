@@ -60,4 +60,8 @@ To Do
 - Memory consumption 
 
 
+Commands for monitoring process
+-------------------------------
+- `ps -AlFH | grep multi`
+- `ps -AlFH | grep gevent`
 
