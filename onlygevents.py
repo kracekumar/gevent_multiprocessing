@@ -10,7 +10,6 @@ import gevent
 import datetime
 from Queue import Empty
 
-print gevent.__version__
 class Consumer(object):
     def __init__(self, q, no_tasks, name):
         self._no_tasks = no_tasks

@@ -5,7 +5,7 @@
     This file is example of getting gevent on top of multiprocessing.
 """
 from multiprocessing import Process, cpu_count, Queue, JoinableQueue
-from gevent import monkey; monkey.patch_all(thread = True);
+from gevent import monkey; monkey.patch_all();
 import gevent
 import datetime
 from Queue import Empty
@@ -41,7 +41,7 @@ class Producer(object):
     def _rungevent(self, no_tasks):
         print("Producer started")
         jobs = [gevent.spawn(self.produce) for x in xrange(no_tasks)]
-        gevent.joinall(jobs)
+#        gevent.joinall(jobs)
 
     def produce(self):
         print("producer gevent started")
