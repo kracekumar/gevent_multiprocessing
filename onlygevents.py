@@ -9,6 +9,7 @@ from gevent.queue import Queue
 import gevent
 import datetime
 from Queue import Empty
+from multiprocessing import cpu_count
 
 class Consumer(object):
     def __init__(self, q, no_tasks, name):
@@ -18,7 +19,6 @@ class Consumer(object):
         self._rungevent(self._queue, self._no_tasks)
 
     def _rungevent(self, q, no_tasks):
-        print("starting gevent on multiprocessing")
         jobs = [gevent.spawn(self._printq, q) for x in xrange(no_tasks)]
         gevent.joinall(jobs)
 
@@ -29,25 +29,24 @@ class Consumer(object):
                                  datetime.datetime.now(), q.get_nowait()))
         except Empty:
             print("All is well")
+        return
 
 class Producer(object):
     def __init__(self, q, no_tasks, name):
-       print(name)
        self._q = q
        self._no_tasks = no_tasks
        self.name = name
        self._rungevent(self._no_tasks)
 
     def _rungevent(self, no_tasks):
-        print("Producer started")
         jobs = [gevent.spawn(self.produce) for x in xrange(no_tasks)]
         gevent.joinall(jobs)
 
     def produce(self):
-        print("producer gevent started")
         for no in xrange(10000):
             print no
             self._q.put_nowait(no)
+        return 
 
 def main():
     q = Queue()
@@ -55,17 +54,21 @@ def main():
           \n 10 producers gevent and 7 consumers gevent")
     producer_gevents = 10
     consumer_gevents = 7
+    cores = cpu_count()
+    total_pair = cores * 2
     start = datetime.datetime.now()
-    p = Producer(q, producer_gevents, "producer")
-    c = Consumer(q, consumer_gevents, "consumer")
+    for i in xrange(total_pair):
+        if not i % 2:
+            p = Producer(q, producer_gevents, "producer")
+        else:
+            c = Consumer(q, consumer_gevents, "consumer")
 
-    print("{0} process with 17 gevent coroutines took {1} seconds to produce {2}\
-           numbers and consume them".format(1, datetime.datetime.now()\
-           - start, producer_gevents * 10000))
+    print("{0} process with {1} producer gevents and {2} consumer gevents took\
+           {3} seconds to produce {4} numbers and consume".format(1, \
+           producer_gevents*cores, consumer_gevents * cores, \
+           datetime.datetime.now() - start, producer_gevents * cores * 10000))
 
-    
-
-
+   
 
 if __name__ == '__main__':
     main()

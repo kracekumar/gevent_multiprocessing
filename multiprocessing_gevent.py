@@ -18,40 +18,46 @@ class Consumer(object):
         self._rungevent(self._queue, self._no_tasks)
 
     def _rungevent(self, q, no_tasks):
-        print("starting gevent on multiprocessing")
-        jobs = [gevent.spawn(self._printq, q) for x in xrange(no_tasks)]
+        jobs = [gevent.spawn(self._printq) for x in xrange(no_tasks)]
         gevent.joinall(jobs)
 
-    def _printq(self, q):
-        try:
-            while 1:
+    def _printq(self):
+        while 1:
+            value = self._queue.get()
+            if value is None:
+                self._queue.task_done()
+                break
+            else:
                 print("{0} time: {1}, value: {2}".format(self.name,\
-                                 datetime.datetime.now(), q.get_nowait()))
-        except Empty:
-            print("All is well")
+                                 datetime.datetime.now(), value))
+        return 
 
 class Producer(object):
-    def __init__(self, q, no_tasks, name):
+    def __init__(self, q, no_tasks, name, consumers_tasks):
        print(name)
        self._q = q
        self._no_tasks = no_tasks
        self.name = name
-       self._rungevent(self._no_tasks)
+       self.consumer_tasks = consumers_tasks
+       self._rungevent()
 
-    def _rungevent(self, no_tasks):
-        print("Producer started")
-        jobs = [gevent.spawn(self.produce) for x in xrange(no_tasks)]
-#        gevent.joinall(jobs)
+    def _rungevent(self):
+        jobs = [gevent.spawn(self.produce) for x in xrange(self._no_tasks)]
+        gevent.joinall(jobs)
+        for x in xrange(self.consumer_tasks):
+            self._q.put_nowait(None)
+        self._q.close()
 
     def produce(self):
-        print("producer gevent started")
         for no in xrange(10000):
             print no
-            self._q.put_nowait(no)
+            self._q.put(no, block = False)
+        return 
 
 def main():
     total_cores = cpu_count()
-    q = Queue()
+    total_processes = total_cores * 2
+    q = JoinableQueue()
     print("Gevent on top multiprocessing with 17 gevent coroutines\
           \n 10 producers gevent and 7 consumers gevent")
     producer_gevents = 10
@@ -59,9 +65,9 @@ def main():
     jobs = []
     start = datetime.datetime.now()
     for x in xrange(total_cores):
-        if not x % 2:
-            p = Process(target=Producer, args=(q, producer_gevents, \
-                                                     "producer %d"%x))
+        if not x % 2 :
+            p = Process(target = Producer, args=(q, producer_gevents,\
+                                            "producer %d"%1, consumer_gevents))
             p.start()
             jobs.append(p)
         else:
@@ -72,13 +78,11 @@ def main():
 
     for job in jobs:
         job.join()
-    print("{0} process with 17 gevent coroutines took {1} seconds to produce {2}\
-           numbers and consume them".format(total_cores, datetime.datetime.now()\
-           - start, producer_gevents * 10000))
 
-    
-
-
+    print("{0} process with {1} producer gevents and {2} consumer gevents took{3}\
+           seconds to produce {4} numbers and consume".format(total_processes,\
+           producer_gevents * total_cores, consumer_gevents * total_cores, \
+           datetime.datetime.now() - start,producer_gevents*total_cores*10000))
 
 if __name__ == '__main__':
     main()
