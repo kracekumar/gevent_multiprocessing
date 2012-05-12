@@ -1,0 +1,20 @@
+Results
+-------
+    - __LocalMachine__
+        - Total Cores + 10 producer gevents + 7 consumer gevents => 
+        multiprocessor_gevents.py: 
+
+        - onlygevents
+          -----------
+
+        1 process with 20 producer gevents and 14 consumer gevents took 
+        0:00:28.176459 seconds to produce 200000 numbers and consume
+
+        4 process with 20 producer gevents and 14 consumer gevents took
+        0:00:15.555849 seconds to produce 200000 numbers and consume
+
+- 2 process with 17 gevent coroutines took 0:00:16.685383 seconds to produce 100000           numbers and consume them
+    - __heroku __
+        - 1 process with 17 gevent coroutines took 0:00:06.309244 seconds to produce 100000           numbers and consume them
+        - 
+
