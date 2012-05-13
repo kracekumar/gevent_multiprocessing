@@ -32,12 +32,15 @@ All the tests are carried on Heroku free account.
 
 3. multiprocessingrequests.py
         
-    - 8 processes on 4 core machine took 0:00:03.684710 time to download 46 urls
-    - 8 processes on 4 core machine took 0:00:00.002761 time to read 46 urls 
+    - 8 processes on 4 core machine took 0:00:17.613300 time to download 100 
+      urls
+    - 8 processes on 4 core machine took 0:00:00.001358 time to read 100 urls 
       from queue
 
+
 4. asyncrequests.py
-    - Requests async took 0:00:03.859900 seconds for 46 urls
+    - Requests async took 0:00:12.328628 seconds for 100 urls
+
 
 How to test in heroku
 ---------------------
