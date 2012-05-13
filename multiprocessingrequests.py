@@ -26,7 +26,11 @@ def download(q, result_queue, time_taken_to_download, \
     urls = []
     try:
         while 1:
-             urls.append(q.get_nowait())
+             value = q.get()
+             if value is not None:
+                 urls.append(q.get())
+             else:
+                 break
     except Empty:
         pass
     time_taken_to_read_from_queue.put_nowait(datetime.datetime.now() - start)
@@ -50,6 +54,8 @@ def main(factor = 2):
             files_to_download.put_nowait(to_download.split('\n')[0])
     cores = cpu_count()
     no_of_processes = cores * factor
+    for i in xrange(no_of_processes):
+        files_to_download.put_nowait(None)
     jobs = []
     start = datetime.datetime.now()
     for name in xrange(no_of_processes):
