@@ -69,7 +69,7 @@ def main(factor = 2):
 
     for job in jobs:
         job.join()
-
+    print result_queue.qsize()
     total_downloaded_urls = 0
     try:
         while 1:
