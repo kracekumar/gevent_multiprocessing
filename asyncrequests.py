@@ -21,6 +21,7 @@ def write_to_disk(response):
         with open(response.headers['content-disposition'].split('=')[1],
                           'wb') as f:
             f.write(response.content)
+    return 
     
 def main():
     urls = get_files_to_download()

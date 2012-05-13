@@ -4,10 +4,20 @@
 """
     code to test multiprocessing and gevent
 """
-from multiprocessing import Process, Queue, cpu_count
+from multiprocessing import Process, JoinableQueue, cpu_count
 from requests import get, async
 import datetime
 from Queue import Empty
+import gevent
+
+def write_to_disk(response):
+    print response.url
+    if response.ok:
+        with open(response.headers['content-disposition'].split('=')[1],
+                          'wb') as f:
+            f.write(response.content)
+            return 1
+    return 0
 
 def download(q, result_queue, time_taken_to_download, \
             time_taken_to_read_from_queue, name):
@@ -15,23 +25,26 @@ def download(q, result_queue, time_taken_to_download, \
     start = datetime.datetime.now()
     urls = []
     try:
-        urls.append(q.get_nowait())
+        while 1:
+             urls.append(q.get_nowait())
     except Empty:
         pass
     time_taken_to_read_from_queue.put_nowait(datetime.datetime.now() - start)
     start = datetime.datetime.now()
     rs = [async.get(url) for url in urls]
     responses = async.map(rs)
-    for r in responses:
-        result_queue.put_nowait(r)
+    jobs = [gevent.spawn(write_to_disk, response) for response in responses]
+    gevent.joinall(jobs)
     time_taken_to_download.put_nowait(datetime.datetime.now() - start)
+    for job in jobs:
+        result_queue.put_nowait(job.get())
 
 def main(factor = 2):
     #E.G: if total cores is 2 , no of processes to be spawned is 2 * factor
-    files_to_download = Queue()
-    result_queue = Queue()
-    time_taken = Queue()
-    time_taken_to_read_from_queue = Queue()
+    files_to_download = JoinableQueue()
+    result_queue = JoinableQueue()
+    time_taken = JoinableQueue()
+    time_taken_to_read_from_queue = JoinableQueue()
     with open('downloads.txt', 'r') as f:
         for to_download in f:
             files_to_download.put_nowait(to_download.split('\n')[0])
@@ -52,8 +65,7 @@ def main(factor = 2):
     try:
         while 1:
             r = result_queue.get_nowait()
-            if r.ok:
-                total_downloaded_urls += 1
+            total_downloaded_urls += r
 
     except Empty:
         pass
@@ -73,18 +85,19 @@ def main(factor = 2):
                 total_time = time_taken.get_nowait()
     except Empty:
         print("{0} processes on {1} core machine took {2} time to download {3}\
-              urls".format(no_of_processes, cores, total, total_downloaded_urls))
+              urls".format(no_of_processes, cores, total_time, \
+                                          total_downloaded_urls))
 
     try:
         while 1:
             if 'queue_reading_time' in locals():
-                queue_reading_time += queue_reading_time.get_nowait()
+                queue_reading_time += time_taken_to_read_from_queue.get_nowait()
             else:
-                queue_reading_time = queue_reading_time.get_nowait()
+                queue_reading_time = time_taken_to_read_from_queue.get_nowait()
     except Empty:
         print("{0} processes on {1} core machine took {2} time to read {3}\
               urls from queue".format(no_of_processes, cores,queue_reading_time\
-              ,len(time_taken_to_read_from_queue)))
+              ,time_taken_to_read_from_queue.qsize()))
 
 if __name__ == "__main__":
     main()
