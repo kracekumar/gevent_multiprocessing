@@ -34,7 +34,7 @@ def download(q, result_queue, time_taken_to_download, \
                  break
     except Empty:
         pass
-    print len(urls)
+
     time_taken_to_read_from_queue.put_nowait(datetime.datetime.now() - start)
     start = datetime.datetime.now()
     rs = [async.get(url) for url in urls]
@@ -51,12 +51,10 @@ def main(factor = 2):
     result_queue = JoinableQueue()
     time_taken = JoinableQueue()
     time_taken_to_read_from_queue = JoinableQueue()
-    count = 0
     with open('downloads.txt', 'r') as f:
         for to_download in f:
             files_to_download.put_nowait(to_download.split('\n')[0])
-            count += 1
-    print count
+    files_to_download_size = files_to_download.qsize()
     cores = cpu_count()
     no_of_processes = cores * factor
     for i in xrange(no_of_processes):
@@ -108,7 +106,7 @@ def main(factor = 2):
     except Empty:
         print("{0} processes on {1} core machine took {2} time to read {3}\
               urls from queue".format(no_of_processes, cores,queue_reading_time\
-              ,time_taken_to_read_from_queue.qsize()))
+              ,files_to_download_size))
 
 if __name__ == "__main__":
     main()
