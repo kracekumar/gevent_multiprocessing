@@ -38,3 +38,9 @@ https://github.com/amoffat/pbs/zipball/master
 https://github.com/ametaireau/pelican/zipball/master
 https://github.com/mozilla-services/circus/zipball/master
 https://github.com/dstanek/pyflakes/zipball/master
+https://github.com/kennethreitz/flask-sslify/zipball/master
+https://github.com/kennethreitz/httpbin/zipball/master
+https://github.com/kennethreitz/d3py/zipball/master
+https://github.com/kennethreitz/omnijson/zipball/master
+https://github.com/kennethreitz/vaincheese/zipball/master
+https://github.com/kennethreitz/fortune-service/zipball/master

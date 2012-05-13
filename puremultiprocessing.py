@@ -9,7 +9,6 @@ from multiprocessing import Process, Queue, cpu_count
 from requests import get
 import datetime
 from Queue import Empty
-import platform
 
 def download(files_to_download):
     try:

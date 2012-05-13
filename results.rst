@@ -18,3 +18,5 @@ Results
         - 1 process with 17 gevent coroutines took 0:00:06.309244 seconds to produce 100000           numbers and consume them
         - 
 
+- asyncresults.py
+    - Requests async took 0:00:02.354094 seconds for 40 urls
