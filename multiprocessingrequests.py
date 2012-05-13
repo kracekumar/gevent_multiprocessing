@@ -49,9 +49,12 @@ def main(factor = 2):
     result_queue = JoinableQueue()
     time_taken = JoinableQueue()
     time_taken_to_read_from_queue = JoinableQueue()
+    count = 0
     with open('downloads.txt', 'r') as f:
         for to_download in f:
             files_to_download.put_nowait(to_download.split('\n')[0])
+            count += 1
+    print count
     cores = cpu_count()
     no_of_processes = cores * factor
     for i in xrange(no_of_processes):
