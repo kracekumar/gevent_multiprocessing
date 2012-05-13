@@ -18,7 +18,6 @@ def write_to_disk(response):
             f.write(response.content)
             return 1
     else:
-        prin
         return 0
 
 def download(q, result_queue, time_taken_to_download, \
@@ -30,7 +29,7 @@ def download(q, result_queue, time_taken_to_download, \
         while 1:
              value = q.get()
              if value is not None:
-                 urls.append(q.get())
+                 urls.append(value)
              else:
                  break
     except Empty:
