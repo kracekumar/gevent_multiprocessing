@@ -17,7 +17,9 @@ def write_to_disk(response):
                           'wb') as f:
             f.write(response.content)
             return 1
-    return 0
+    else:
+        prin
+        return 0
 
 def download(q, result_queue, time_taken_to_download, \
             time_taken_to_read_from_queue, name):
@@ -33,6 +35,7 @@ def download(q, result_queue, time_taken_to_download, \
                  break
     except Empty:
         pass
+    print len(urls)
     time_taken_to_read_from_queue.put_nowait(datetime.datetime.now() - start)
     start = datetime.datetime.now()
     rs = [async.get(url) for url in urls]
