@@ -30,6 +30,15 @@ All the tests are carried on Heroku free account.
     8 process with 40 producer gevents and 28 consumer gevents took0:00:13.906008 
     seconds to produce 400000 numbers and consume
 
+3. multiprocessingrequests.py
+        
+    - 8 processes on 4 core machine took 0:00:03.684710 time to download 46 urls
+    - 8 processes on 4 core machine took 0:00:00.002761 time to read 46 urls 
+      from queue
+
+4. asyncrequests.py
+    - Requests async took 0:00:03.859900 seconds for 46 urls
+
 How to test in heroku
 ---------------------
 1. Follow all the steps for creating a python application

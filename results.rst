@@ -23,6 +23,7 @@ Requests
 
 - asyncresults.py
     - Requests async took 0:00:02.354094 seconds for 40 urls
+    - Requests async took 0:00:03.859900 seconds for 46 urls
 
 - multiprocessingrequests
     - 8 processes on 4 core machine took 0:00:03.684710 time to download 46 urls
